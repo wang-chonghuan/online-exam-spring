@@ -10,6 +10,7 @@ public class Course {
     private Long id;
 
     private String name;
+    private int status; // 1 active, 2 finished
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher")
