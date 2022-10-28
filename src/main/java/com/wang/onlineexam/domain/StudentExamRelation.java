@@ -8,23 +8,23 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CATEGORY_ITEM")
+@Table(name = "student_exam_relation")
 @org.hibernate.annotations.Immutable
-public class CategorizedItem {
+public class StudentExamRelation {
 
     @Embeddable
     public static class Id implements Serializable {
-        @Column(name = "CATEGORY_ID")
-        private Long categoryId;
-        @Column(name = "ITEM_ID")
-        private Long itemId;
+        @Column(name = "STUDENT_ID")
+        private Long studentId;
+        @Column(name = "EXAM_ID")
+        private Long examId;
 
         public Id() {
         }
 
-        public Id(Long categoryId, Long itemId) {
-            this.categoryId = categoryId;
-            this.itemId = itemId;
+        public Id(Long studentId, Long itemId) {
+            this.studentId = studentId;
+            this.examId = examId;
         }
         //implementing equals and hashCode
     }
@@ -40,30 +40,30 @@ public class CategorizedItem {
     private LocalDateTime addedOn;
     @ManyToOne
     @JoinColumn(
-            name = "CATEGORY_ID",
+            name = "STUDENT_ID",
             insertable = false, updatable = false)
-    private Category category;
+    private Student student;
     @ManyToOne
     @JoinColumn(
-            name = "ITEM_ID",
+            name = "EXAM_ID",
             insertable = false, updatable = false)
-    private Item item;
+    private Exam exam;
 
-    public CategorizedItem(
+    public StudentExamRelation(
             String addedByUsername,
-            Category category,
-            Item item) {
+            Student student,
+            Exam exam) {
         this.addedBy = addedByUsername;
-        this.category = category;
-        this.item = item;
-        this.id.categoryId = category.getId();
-        this.id.itemId = item.getId();
+        this.student = student;
+        this.exam = exam;
+        this.id.studentId = student.getId();
+        this.id.examId = exam.getId();
         //category.addCategorizedItem(this);
         //item.addCategorizedItem(this);
     }
     // ...
 
-    public CategorizedItem() {
+    public StudentExamRelation() {
 
     }
 }
