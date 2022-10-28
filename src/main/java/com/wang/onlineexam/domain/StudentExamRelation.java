@@ -2,6 +2,7 @@ package com.wang.onlineexam.domain;
 
 import com.sun.istack.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,11 @@ import java.time.LocalDateTime;
 @Table(name = "student_exam_relation")
 @org.hibernate.annotations.Immutable
 public class StudentExamRelation {
+
+    private double score;
+
+    // how to reflect it to Json type in db?
+    private String answeredPapaer;
 
     @Embeddable
     public static class Id implements Serializable {
@@ -31,18 +37,22 @@ public class StudentExamRelation {
 
     @EmbeddedId
     private Id id = new Id();
+
     @Column(updatable = false)
     @NotNull
     private String addedBy;
+
     @Column(updatable = false)
     @NotNull
     @CreationTimestamp
     private LocalDateTime addedOn;
+
     @ManyToOne
     @JoinColumn(
             name = "STUDENT_ID",
             insertable = false, updatable = false)
     private Student student;
+
     @ManyToOne
     @JoinColumn(
             name = "EXAM_ID",

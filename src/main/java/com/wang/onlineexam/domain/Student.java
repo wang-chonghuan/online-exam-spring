@@ -11,6 +11,9 @@ public class Student {
     @Column
     private Long id;
 
+    private String name;
+    private String email;
+
     @OneToMany(mappedBy = "student")
     private Set<StudentExamRelation> studentExamRelations = new HashSet<>();
 
