@@ -1,13 +1,13 @@
 package com.wang.onlineexam.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Teacher {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="department")
-    private Department department;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "teacher")
+    private List<Course> courseList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,11 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(long id, String name, String email, Department department) {
+    public Teacher(long id, String name, String email) {
         super();
         this.id = id;
         this.name = name;
         this.email = email;
-        this.department = department;
     }
 
     public long getId() {
@@ -50,13 +49,5 @@ public class Teacher {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 }
