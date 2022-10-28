@@ -1,13 +1,19 @@
 package com.wang.onlineexam.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-public class Teacher {
+@Entity(name = "student")
+public class Student {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="department")
-    private Department department;
+
+    @ManyToMany(cascade= CascadeType.ALL)
+    @JoinTable(
+            name = "student_exam_rel",
+            joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "exam_id", referencedColumnName = "id"))
+    private List<Exam> examList = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +22,21 @@ public class Teacher {
     private String name;
     private String email;
 
-
-    public Teacher() {
+    public Student() {
     }
 
-    public Teacher(long id, String name, String email, Department department) {
-        super();
+    public Student(long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.department = department;
+    }
+
+    public List<Exam> getExamList() {
+        return examList;
+    }
+
+    public void setExamList(List<Exam> examList) {
+        this.examList = examList;
     }
 
     public long getId() {
@@ -50,13 +61,5 @@ public class Teacher {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 }

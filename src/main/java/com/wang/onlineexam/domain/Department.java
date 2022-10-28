@@ -7,14 +7,17 @@ import java.util.List;
 @Entity
 public class Department {
 
+    // this property is not a field in the table department
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "department")
+    private List<Teacher> teachersList;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private long id;
     private String name;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy = "department")
-    private List<Teacher> teachers;
+
 
     public Department() {
     }
@@ -42,10 +45,10 @@ public class Department {
     }
 
     public List<Teacher> getTeachers() {
-        return teachers;
+        return teachersList;
     }
 
-    public void setTeachers(List<Teacher> teachers) {
-        this.teachers = teachers;
+    public void setTeachers(List<Teacher> teachersList) {
+        this.teachersList = teachersList;
     }
 }
