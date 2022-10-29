@@ -12,7 +12,12 @@ public class Course {
     private Long id;
 
     private String name;
-    private int status; // 1 active, 2 finished
+    @Enumerated(EnumType.ORDINAL)
+    private CourseStatus courseStatus;
+
+    public enum CourseStatus {
+        ACTIVE, FINISHED
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher")
@@ -25,4 +30,45 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "STUDENT_ID")
     )
     private Set<Student> students = new HashSet<>();
+
+    public Course() {
+    }
+
+    public Course(String name, CourseStatus courseStatus, Teacher teacher) {
+        this.name = name;
+        this.courseStatus = courseStatus;
+        this.teacher = teacher;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CourseStatus getStatus() {
+        return courseStatus;
+    }
+
+    public void setStatus(CourseStatus courseStatus) {
+        this.courseStatus = courseStatus;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

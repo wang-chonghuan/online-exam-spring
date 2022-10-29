@@ -30,20 +30,26 @@ public class Exam {
     @Column
     private Long id;
 
-    @OneToMany(mappedBy = "exam")
-    private Set<StudentExamRelation> studentExamRelations = new HashSet<>();
-
     private String title;
     private String description;
     private String location;
     private LocalDateTime publishTime;
     private LocalDateTime examTime;
     private int durationSeconds;
-    private int status; // 1 setting-up, 2 registering, 3 grading, 4 finished
+
+    @Enumerated(EnumType.ORDINAL)
+    private ExamStatus examStatus;
+
+    @OneToMany(mappedBy = "exam")
+    private Set<StudentExamRelation> studentExamRelations = new HashSet<>();
 
     @Type(type = "json")
     @Column(name = "paper_content", columnDefinition = "json")
     private Map<String,Object> paperContent = new HashMap<>();
+
+    public enum ExamStatus {
+        SETTING, REGISTERING, GRADING, FINISHED
+    }
 
     public Long getId() {
         return id;
@@ -51,5 +57,82 @@ public class Exam {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Exam() {
+    }
+
+    public Exam(String title, String description, String location, LocalDateTime publishTime, LocalDateTime examTime, int durationSeconds, ExamStatus examStatus) {
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.publishTime = publishTime;
+        this.examTime = examTime;
+        this.durationSeconds = durationSeconds;
+        this.examStatus = examStatus;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public LocalDateTime getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(LocalDateTime publishTime) {
+        this.publishTime = publishTime;
+    }
+
+    public LocalDateTime getExamTime() {
+        return examTime;
+    }
+
+    public void setExamTime(LocalDateTime examTime) {
+        this.examTime = examTime;
+    }
+
+    public int getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(int durationSeconds) {
+        this.durationSeconds = durationSeconds;
+    }
+
+    public ExamStatus getExamStatus() {
+        return examStatus;
+    }
+
+    public void setExamStatus(ExamStatus examStatus) {
+        this.examStatus = examStatus;
+    }
+
+    public Map<String, Object> getPaperContent() {
+        return paperContent;
+    }
+
+    public void setPaperContent(Map<String, Object> paperContent) {
+        this.paperContent = paperContent;
     }
 }
