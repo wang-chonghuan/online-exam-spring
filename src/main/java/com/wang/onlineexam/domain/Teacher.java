@@ -20,9 +20,7 @@ public class Teacher {
     public Teacher() {
     }
 
-    public Teacher(long id, String name, String email) {
-        super();
-        this.id = id;
+    public Teacher(String name, String email) {
         this.name = name;
         this.email = email;
     }
