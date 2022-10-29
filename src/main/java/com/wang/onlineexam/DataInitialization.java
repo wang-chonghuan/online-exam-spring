@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +43,19 @@ public class DataInitialization {
         Optional<Teacher> queryTeacher1 = queryTeacherList.stream().findFirst();
         long idTeacher1 = queryTeacher1.get().getId();
         logger.debug("teacher1's id is: " + idTeacher1);
-        // insert course1 for teacher1
-        Course course1 = new Course("golang", Course.CourseStatus.ACTIVE, teacherRepository.findById(idTeacher1).get());
+        // insert course1 for course1
+        Course course1 = new Course("CS5741-22", Course.CourseStatus.ACTIVE, teacherRepository.findById(idTeacher1).get());
+        Student queryStudent1 = studentRepository.findByEmail("student1.email").stream().findFirst().get();
+        Student queryStudent2 = studentRepository.findByEmail("student2.email").stream().findFirst().get();
+        course1.getStudents().add(queryStudent1); // autogen record in table StudentCourseRelation
+        course1.getStudents().add(queryStudent2);
         courseRepository.save(course1);
+        // insert exam1 to course1
+        LocalDateTime examTime = LocalDateTime.of(2022, 12, 31, 18, 59, 59);
+        Course queryCourse1 = courseRepository.findByName("CS5741-22").stream().findFirst().get();
+        Exam exam1withoutStudentsAndPaper = new Exam(
+                queryCourse1, "course1 golang midterm exam1", "10% of the final score",
+                "CS025", LocalDateTime.now(), examTime, 2400, Exam.ExamStatus.SETTING);
+        examRepository.save(exam1withoutStudentsAndPaper);
     }
 }

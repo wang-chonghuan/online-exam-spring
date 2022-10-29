@@ -30,6 +30,11 @@ public class Exam {
     @Column
     private Long id;
 
+    // one exam has one course, one course has many exams
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course")
+    private Course course;
+
     private String title;
     private String description;
     private String location;
@@ -62,7 +67,8 @@ public class Exam {
     public Exam() {
     }
 
-    public Exam(String title, String description, String location, LocalDateTime publishTime, LocalDateTime examTime, int durationSeconds, ExamStatus examStatus) {
+    public Exam(Course course, String title, String description, String location, LocalDateTime publishTime, LocalDateTime examTime, int durationSeconds, ExamStatus examStatus) {
+        this.course = course;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -134,5 +140,21 @@ public class Exam {
 
     public void setPaperContent(Map<String, Object> paperContent) {
         this.paperContent = paperContent;
+    }
+
+    public Set<StudentExamRelation> getStudentExamRelations() {
+        return studentExamRelations;
+    }
+
+    public void setStudentExamRelations(Set<StudentExamRelation> studentExamRelations) {
+        this.studentExamRelations = studentExamRelations;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }
