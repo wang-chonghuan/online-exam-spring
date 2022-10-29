@@ -17,6 +17,9 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private Set<StudentExamRelation> studentExamRelations = new HashSet<>();
 
+    @ManyToMany(mappedBy = "students")
+    private Set<Course> courses = new HashSet<>();
+
     public Long getId() {
         return id;
     }
