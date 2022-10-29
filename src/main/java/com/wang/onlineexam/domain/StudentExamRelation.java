@@ -7,7 +7,12 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
+// for many-to-many relation with this intermediate entity,
+// you should only add a record to this table
+// you should not add StudentExamRelation obj to neither Student nor Exam entity!
 @Entity
 @Table(name = "student_exam_relation")
 @org.hibernate.annotations.Immutable
@@ -15,8 +20,9 @@ public class StudentExamRelation {
 
     private double score;
 
-    // how to reflect it to Json type in db?
-    private String answeredPapaer;
+    @Type(type = "json")
+    @Column(name = "paper_answered", columnDefinition = "json")
+    private Map<String,Object> paperAnswered = new HashMap<>();
 
     @Embeddable
     public static class Id implements Serializable {
@@ -40,10 +46,6 @@ public class StudentExamRelation {
 
     @Column(updatable = false)
     @NotNull
-    private String addedBy;
-
-    @Column(updatable = false)
-    @NotNull
     @CreationTimestamp
     private LocalDateTime addedOn;
 
@@ -59,22 +61,70 @@ public class StudentExamRelation {
             insertable = false, updatable = false)
     private Exam exam;
 
-    public StudentExamRelation(
-            String addedByUsername,
-            Student student,
-            Exam exam) {
-        this.addedBy = addedByUsername;
+    public StudentExamRelation(Student student, Exam exam) {
         this.student = student;
         this.exam = exam;
         this.id.studentId = student.getId();
         this.id.examId = exam.getId();
+        // TODO!!! should add student to the set-student in obj-exam? should add exam to the set-exam in obj-student? the db is ok if not add
+        // result: the db is not ok if add
+        // throws: Caused by: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.wang.onlineexam.domain.Student.studentExamRelations, could not initialize proxy - no Session
+        // student.getStudentExamRelations().add(this);
+        // exam.getStudentExamRelations().add(this);
         //category.addCategorizedItem(this);
         //item.addCategorizedItem(this);
     }
-    // ...
 
     public StudentExamRelation() {
 
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public Id getId() {
+        return id;
+    }
+
+    public void setId(Id id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getAddedOn() {
+        return addedOn;
+    }
+
+    public void setAddedOn(LocalDateTime addedOn) {
+        this.addedOn = addedOn;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
+
+    public Map<String, Object> getPaperAnswered() {
+        return paperAnswered;
+    }
+
+    public void setPaperAnswered(Map<String, Object> paperAnswered) {
+        this.paperAnswered = paperAnswered;
     }
 }
 

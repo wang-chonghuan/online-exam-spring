@@ -51,4 +51,20 @@ public class Student {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Set<StudentExamRelation> getStudentExamRelations() {
+        return studentExamRelations;
+    }
+
+    public void setStudentExamRelations(Set<StudentExamRelation> studentExamRelations) {
+        this.studentExamRelations = studentExamRelations;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
 }
