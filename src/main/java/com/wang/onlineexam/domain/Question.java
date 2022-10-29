@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class QuestionBank {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -31,7 +31,7 @@ public class QuestionBank {
         SINGLE, MULTIPLE, WRITING
     }
 
-    public QuestionBank(QuestionType questionType, Map<String, Object> questionStatement, Map<String, Object> referencedAnswer, String tags) {
+    public Question(QuestionType questionType, Map<String, Object> questionStatement, Map<String, Object> referencedAnswer, String tags) {
         this.questionType = questionType;
         this.questionStatement = questionStatement;
         this.referencedAnswer = referencedAnswer;
@@ -76,5 +76,8 @@ public class QuestionBank {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public Question() {
     }
 }
