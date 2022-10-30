@@ -69,12 +69,12 @@ public class DataInitialization {
         // set a new record to Question
         // conver json to java format string by using this website: https://tools.knowledgewalls.com/json-to-string
         Map<String, Object> questionStatement1 = new ObjectMapper().readValue(
-                "{\"type\":\"single\",\"statement\":\"which year is golang first released?\",\"choices\":{\"A\":\"2010\",\"B\":\"2011\",\"C\":\"2012\",\"D\":\"2017\",\"E\":\"2018\"}}", HashMap.class);
+                "{\"type\":\"single\",\"statement\":\"which year is golang first released?\",\"choices\":[\"A. 2010\",\"B. 2007\",\"C. 2012\",\"D. 2017\",\"E. 2018\"]}", HashMap.class);
         Map<String, Object> referencedAnswer1 = new ObjectMapper().readValue(
                 "{\"type\":\"single\",\"answer\":\"B\"}", HashMap.class);
         Question question1 = new Question(Question.QuestionType.SINGLE, questionStatement1, referencedAnswer1, "golang");
         Map<String, Object> questionStatement2 = new ObjectMapper().readValue(
-                "{\"type\":\"multiple\",\"statement\":\"which year is NOT golang first released?\",\"choices\":{\"A\":\"1995\",\"B\":\"2015\",\"C\":\"2011\",\"D\":\"2017\"}}", HashMap.class);
+                "{\"type\":\"multiple\",\"statement\":\"which year is NOT golang first released?\",\"choices\":[\"A. 2010\",\"B. 2011\",\"C. 2007\",\"D. 2017\"]}", HashMap.class);
         Map<String, Object> referencedAnswer2 = new ObjectMapper().readValue(
                 "{\"type\":\"multiple\",\"answer\":\"A,B,D\"}", HashMap.class);
         Question question2 = new Question(Question.QuestionType.MULTIPLE, questionStatement2, referencedAnswer2, "golang");

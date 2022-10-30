@@ -1,6 +1,5 @@
 package com.wang.onlineexam.web;
 
-import com.wang.onlineexam.domain.ReqCreateTeacher;
 import com.wang.onlineexam.domain.Teacher;
 import com.wang.onlineexam.domain.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class TeacherController {
     TeacherRepository teacherRepository;
 
     @RequestMapping(value = "/create-teacher", method = RequestMethod.POST)
-    public ResponseEntity<?> createTeacher(@RequestBody ReqCreateTeacher reqCreateTeacher) {
+    public ResponseEntity<?> createTeacher(@RequestBody Teacher.ReqCreateTeacher reqCreateTeacher) {
         teacherRepository.save(new Teacher(reqCreateTeacher.getName(), reqCreateTeacher.getEmail()));
         // no ResponseEntity.ok().build(), this is 200, which is wrong here
         return new ResponseEntity(HttpStatus.CREATED); // should be 201 for posting success

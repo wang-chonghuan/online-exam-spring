@@ -66,6 +66,7 @@ public class StudentExamRelation {
         this.exam = exam;
         this.id.studentId = student.getId();
         this.id.examId = exam.getId();
+        this.score = 0.0;
         // TODO!!! should add student to the set-student in obj-exam? should add exam to the set-exam in obj-student? the db is ok if not add
         // result: the db is not ok if add
         // throws: Caused by: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.wang.onlineexam.domain.Student.studentExamRelations, could not initialize proxy - no Session

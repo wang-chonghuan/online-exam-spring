@@ -17,8 +17,8 @@ public class Question {
     private QuestionType questionType;
 
     @Type(type = "json")
-    @Column(name = "question_statement", columnDefinition = "json")
-    private Map<String,Object> questionStatement = new HashMap<>();
+    @Column(name = "question_content", columnDefinition = "json")
+    private Map<String,Object> questionContent = new HashMap<>();
 
     @Type(type = "json")
     @Column(name = "referenced_answer", columnDefinition = "json")
@@ -31,9 +31,9 @@ public class Question {
         SINGLE, MULTIPLE, WRITING
     }
 
-    public Question(QuestionType questionType, Map<String, Object> questionStatement, Map<String, Object> referencedAnswer, String tags) {
+    public Question(QuestionType questionType, Map<String, Object> questionContent, Map<String, Object> referencedAnswer, String tags) {
         this.questionType = questionType;
-        this.questionStatement = questionStatement;
+        this.questionContent = questionContent;
         this.referencedAnswer = referencedAnswer;
         this.tags = tags;
     }
@@ -54,12 +54,12 @@ public class Question {
         this.questionType = questionType;
     }
 
-    public Map<String, Object> getQuestionStatement() {
-        return questionStatement;
+    public Map<String, Object> getQuestionContent() {
+        return questionContent;
     }
 
-    public void setQuestionStatement(Map<String, Object> questionStatement) {
-        this.questionStatement = questionStatement;
+    public void setQuestionContent(Map<String, Object> questionContent) {
+        this.questionContent = questionContent;
     }
 
     public Map<String, Object> getReferencedAnswer() {

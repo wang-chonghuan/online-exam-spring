@@ -18,6 +18,7 @@ public class TeacherRestTest {
     @Autowired
     private MockMvc mockMvc;
 
+    // test post for url: http://localhost:8080/create-teachers, which is in TeacherController
     @Test
     public void testPostTeacher() throws Exception {
         ResultActions r = this.mockMvc.perform(post("/create-teacher")
@@ -26,6 +27,7 @@ public class TeacherRestTest {
         r = r.andDo(print()).andExpect(status().isCreated());
     }
 
+    // test post for url: http://localhost:8080/data-api/teachers, which is a Spring Data Rest auto api
     @Test
     public void testDataApiPostTeacherDrapi() throws Exception {
         ResultActions r = this.mockMvc.perform(post("/data-api/teachers")

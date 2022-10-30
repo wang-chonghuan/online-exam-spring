@@ -67,7 +67,14 @@ public class Exam {
     public Exam() {
     }
 
-    public Exam(Course course, String title, String description, String location, LocalDateTime publishTime, LocalDateTime examTime, int durationSeconds, ExamStatus examStatus) {
+    public Exam(Course course,
+                String title,
+                String description,
+                String location,
+                LocalDateTime publishTime,
+                LocalDateTime examTime,
+                int durationSeconds,
+                ExamStatus examStatus) {
         this.course = course;
         this.title = title;
         this.description = description;
@@ -157,4 +164,5 @@ public class Exam {
     public void setCourse(Course course) {
         this.course = course;
     }
+
 }
