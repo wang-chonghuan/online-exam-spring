@@ -80,7 +80,15 @@ public class QuestionWrapper {
         }
     }
 
-    public class Param {
+    // this inner class must be static, otherwise it cant be newed outside its owner class
+    public static class Param {
+        public Param(long questionId, int order, double mark, double score, String answer) {
+            this.questionId = questionId;
+            this.order = order;
+            this.mark = mark;
+            this.score = score;
+            this.answer = answer;
+        }
         public long questionId;
         public int order;
         public double mark;

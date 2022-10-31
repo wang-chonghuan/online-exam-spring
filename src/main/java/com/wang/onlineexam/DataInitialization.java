@@ -57,7 +57,7 @@ public class DataInitialization {
         LocalDateTime examTime = LocalDateTime.of(2022, 12, 31, 18, 59, 59);
         Course queryCourse1 = courseRepository.findByName("CS5741-22").stream().findFirst().get();
         Exam exam1withoutStudentsAndPaper = new Exam(
-                queryCourse1, "course1 golang midterm exam1", "10% of the final score",
+                queryCourse1, "CS5741-midtern-exam", "10% of the final score",
                 "CS025", LocalDateTime.now(), examTime, 2400, Exam.ExamStatus.SETTING);
         Exam queryExam1 = examRepository.save(exam1withoutStudentsAndPaper);
 
@@ -69,15 +69,15 @@ public class DataInitialization {
         // set a new record to Question
         // conver json to java format string by using this website: https://tools.knowledgewalls.com/json-to-string
         Map<String, Object> questionStatement1 = new ObjectMapper().readValue(
-                "{\"type\":\"single\",\"statement\":\"which year is golang first released?\",\"choices\":[\"A. 2010\",\"B. 2007\",\"C. 2012\",\"D. 2017\",\"E. 2018\"]}", HashMap.class);
+                "{\"statement\":\"which year is golang first released?\",\"choices\":[\"A. 2010\",\"B. 2007\",\"C. 2012\",\"D. 2017\",\"E. 2018\"]}", HashMap.class);
         String refAnswer1 = "B";
         Question question1 = new Question(Question.QuestionType.SINGLE, questionStatement1, refAnswer1, "golang");
         Map<String, Object> questionStatement2 = new ObjectMapper().readValue(
-                "{\"type\":\"multiple\",\"statement\":\"which year is NOT golang first released?\",\"choices\":[\"A. 2010\",\"B. 2011\",\"C. 2007\",\"D. 2017\"]}", HashMap.class);
+                "{\"statement\":\"which year is NOT golang first released?\",\"choices\":[\"A. 2010\",\"B. 2011\",\"C. 2007\",\"D. 2017\"]}", HashMap.class);
         String refAnswer2 = "A,B,D";
         Question question2 = new Question(Question.QuestionType.MULTIPLE, questionStatement2, refAnswer2, "golang");
         Map<String, Object> questionStatement3 = new ObjectMapper().readValue(
-                "{\"type\":\"writing\",\"statement\":\"Who created golang?\",\"rows\":2}", HashMap.class);
+                "{\"statement\":\"Who created golang?\"}", HashMap.class);
         String refAnswer3 = "Robert Griesemer, Rob Pike, and Ken Thompson";
         Question question3 = new Question(Question.QuestionType.WRITING, questionStatement3, refAnswer3, "golang,programming language");
         questionRepository.saveAll(Arrays.asList(question1, question2, question3));

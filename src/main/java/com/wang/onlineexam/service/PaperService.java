@@ -16,7 +16,8 @@ public class PaperService {
     @Autowired
     private StudentExamRelationRepository studentExamRelationRepository;
 
-    public void createBlankPaperAndSave(long examId, List<QuestionWrapper.Param> paramList) {
+    // create paper
+    public Exam createBlankPaperAndSave(long examId, List<QuestionWrapper.Param> paramList) {
         Exam exam = examRepository.findById(examId).get();
 
         List<QuestionWrapper> blankQuestionList = new ArrayList<>();
@@ -26,11 +27,17 @@ public class PaperService {
             qw.initByClass(question, qParam);
             blankQuestionList.add(qw);
         }
-
-        exam.setBlankPaper(QuestionWrapper.questionWrapperListToJsonmap(blankQuestionList, "blank_question_list"));
-        examRepository.save(exam);
+        if(blankQuestionList.isEmpty()) {
+            return exam;
+        } else {
+            exam.setBlankPaper(QuestionWrapper.questionWrapperListToJsonmap(blankQuestionList, "blank_question_list"));
+            exam.setExamStatus(Exam.ExamStatus.REGISTERING);
+            Exam savedExam = examRepository.save(exam);
+            return savedExam;
+        }
     }
 
+    // answer paper
     public void createAnsweredPaperAndSave(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
 
@@ -52,6 +59,7 @@ public class PaperService {
         studentExamRelationRepository.save(rel);
     }
 
+    // grade paper step 1
     // return all the writing questions to frontend, json format
     public Map<String, Object> findAllWritingQuestions(long studentId, long examId) {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
@@ -71,6 +79,7 @@ public class PaperService {
         return QuestionWrapper.questionWrapperListToJsonmap(writingQuestionList, "writing_question_list");
     }
 
+    // grade paper step 2
     public void saveWritingScores(long studentId, long examId, ArrayList<QuestionWrapper.Param> paramList) throws Exception {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaperJsonmap = rel.getPaperAnswered();

@@ -24,6 +24,7 @@ public class OnlineExamApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		logger.info("before data init");
+		// even when doing unit test, this method can be called, so the data here can be used in unit test
 		dataInitialization.init();
 		logger.info("after data init");
 	}
