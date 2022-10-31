@@ -13,9 +13,10 @@ import java.util.Map;
 // for many-to-many relation with this intermediate entity,
 // you should only add a record to this table
 // you should not add StudentExamRelation obj to neither Student nor Exam entity!
+// todo //@org.hibernate.annotations.Immutable if use this annotation, the record and not be updated!!!
 @Entity
 @Table(name = "student_exam_relation")
-@org.hibernate.annotations.Immutable
+//@org.hibernate.annotations.Immutable
 public class StudentExamRelation {
 
     private double score;
@@ -43,12 +44,12 @@ public class StudentExamRelation {
 
     @EmbeddedId
     private Id id = new Id();
-
+/*
     @Column(updatable = false)
     @NotNull
     @CreationTimestamp
     private LocalDateTime addedOn;
-
+*/
     @ManyToOne
     @JoinColumn(
             name = "STUDENT_ID",
@@ -94,14 +95,6 @@ public class StudentExamRelation {
 
     public void setId(Id id) {
         this.id = id;
-    }
-
-    public LocalDateTime getAddedOn() {
-        return addedOn;
-    }
-
-    public void setAddedOn(LocalDateTime addedOn) {
-        this.addedOn = addedOn;
     }
 
     public Student getStudent() {

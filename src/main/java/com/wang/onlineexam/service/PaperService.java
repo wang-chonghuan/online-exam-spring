@@ -38,8 +38,9 @@ public class PaperService {
     }
 
     // answer paper
-    public void createAnsweredPaperAndSave(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
-        StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
+    public StudentExamRelation createAnsweredPaperAndSave(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
+        // StudentExamRelation.Id id = new StudentExamRelation.Id(studentId, examId);
+        StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
 
         List<QuestionWrapper> answeredQuestionList = new ArrayList<>();
         double scoreOfChoiceQuestions = 0.0;
@@ -54,15 +55,18 @@ public class PaperService {
             answeredQuestionList.add(qw);
         }
 
+
+        Map<String, Object> answeredPaper = QuestionWrapper.questionWrapperListToJsonmap(answeredQuestionList, "answered_question_list");
+        rel.setPaperAnswered(answeredPaper);
         rel.setScore(scoreOfChoiceQuestions);
-        rel.setPaperAnswered(QuestionWrapper.questionWrapperListToJsonmap(answeredQuestionList, "answered_question_list"));
-        studentExamRelationRepository.save(rel);
+        StudentExamRelation retRel = studentExamRelationRepository.save(rel);
+        return retRel;
     }
 
     // grade paper step 1
     // return all the writing questions to frontend, json format
     public Map<String, Object> findAllWritingQuestions(long studentId, long examId) {
-        StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
+        StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaper = rel.getPaperAnswered();
 
         List<Object> questionWrapperList = (List<Object>)answeredPaper.get("answered_question_list");
@@ -81,7 +85,7 @@ public class PaperService {
 
     // grade paper step 2
     public void saveWritingScores(long studentId, long examId, ArrayList<QuestionWrapper.Param> paramList) throws Exception {
-        StudentExamRelation rel = studentExamRelationRepository.findByStudentAndExam(studentId, examId).stream().findFirst().get();
+        StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaperJsonmap = rel.getPaperAnswered();
         List<QuestionWrapper> questionWrapperList = QuestionWrapper.jsonmapToQuestionWrapperList(answeredPaperJsonmap, "answered_question_list");
         double totalScore = rel.getScore();

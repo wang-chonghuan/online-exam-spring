@@ -59,12 +59,18 @@ public class DataInitialization {
         Exam exam1withoutStudentsAndPaper = new Exam(
                 queryCourse1, "CS5741-midtern-exam", "10% of the final score",
                 "CS025", LocalDateTime.now(), examTime, 2400, Exam.ExamStatus.SETTING);
+        examRepository.save(exam1withoutStudentsAndPaper);
+        exam1withoutStudentsAndPaper.setLocation("CS429");
         Exam queryExam1 = examRepository.save(exam1withoutStudentsAndPaper);
 
         // set students to exam1
         StudentExamRelation studentExamRelation1 = new StudentExamRelation(queryStudent1, queryExam1);
         StudentExamRelation studentExamRelation2 = new StudentExamRelation(queryStudent2, queryExam1);
-        studentExamRelationRepository.saveAll(Arrays.asList(studentExamRelation1, studentExamRelation2));
+        studentExamRelationRepository.save(studentExamRelation1);
+        studentExamRelationRepository.save(studentExamRelation2);
+        //studentExamRelation1.setScore(9.0);
+        studentExamRelationRepository.save(studentExamRelation1);
+        //studentExamRelationRepository.saveAll(Arrays.asList(studentExamRelation1, studentExamRelation2));
 
         // set a new record to Question
         // conver json to java format string by using this website: https://tools.knowledgewalls.com/json-to-string

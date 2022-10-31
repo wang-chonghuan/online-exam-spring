@@ -8,5 +8,5 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface StudentExamRelationRepository extends CrudRepository<StudentExamRelation, Long> {
-    List<StudentExamRelation> findByStudentAndExam(@Param("student")long student, @Param("exam")long exam);
+    List<StudentExamRelation> findByStudentIdAndExamId(@Param("student_id")long studentId, @Param("exam_id")long examId);
 }
