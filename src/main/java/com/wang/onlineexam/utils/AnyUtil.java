@@ -28,6 +28,11 @@ public class AnyUtil {
         return null;
     }
 
+    // todo
+    public static String mapSoToStr(Map<String, Object> mapSo) {
+        return null;
+    }
+
     public static Map<String, String> objToMapSs(Object obj) {
         return mapOoToMapSs(objToMapSo(obj));
     }

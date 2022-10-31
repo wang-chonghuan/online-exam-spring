@@ -24,6 +24,7 @@ import java.util.Set;
 @TypeDefs({
         @TypeDef(name = "json", typeClass = JsonType.class)
 })
+
 public class Exam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +51,7 @@ public class Exam {
 
     @Type(type = "json")
     @Column(name = "paper_content", columnDefinition = "json")
-    private Map<String,Object> paperContent = new HashMap<>();
+    private Map<String,Object> blankPaper = new HashMap<>();
 
     public enum ExamStatus {
         SETTING, REGISTERING, GRADING, FINISHED
@@ -141,12 +142,12 @@ public class Exam {
         this.examStatus = examStatus;
     }
 
-    public Map<String, Object> getPaperContent() {
-        return paperContent;
+    public Map<String, Object> getBlankPaper() {
+        return blankPaper;
     }
 
-    public void setPaperContent(Map<String, Object> paperContent) {
-        this.paperContent = paperContent;
+    public void setBlankPaper(Map<String, Object> paperContent) {
+        this.blankPaper = paperContent;
     }
 
     public Set<StudentExamRelation> getStudentExamRelations() {

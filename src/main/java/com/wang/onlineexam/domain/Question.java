@@ -20,9 +20,7 @@ public class Question {
     @Column(name = "question_content", columnDefinition = "json")
     private Map<String,Object> questionContent = new HashMap<>();
 
-    @Type(type = "json")
-    @Column(name = "referenced_answer", columnDefinition = "json")
-    private Map<String,Object> referencedAnswer = new HashMap<>();
+    private String refAnswer;
 
     @NotNull
     private String tags; // one question has many tags, can be selected by regular-expressions
@@ -31,10 +29,10 @@ public class Question {
         SINGLE, MULTIPLE, WRITING
     }
 
-    public Question(QuestionType questionType, Map<String, Object> questionContent, Map<String, Object> referencedAnswer, String tags) {
+    public Question(QuestionType questionType, Map<String, Object> questionContent, String refAnswer, String tags) {
         this.questionType = questionType;
         this.questionContent = questionContent;
-        this.referencedAnswer = referencedAnswer;
+        this.refAnswer = refAnswer;
         this.tags = tags;
     }
 
@@ -62,12 +60,12 @@ public class Question {
         this.questionContent = questionContent;
     }
 
-    public Map<String, Object> getReferencedAnswer() {
-        return referencedAnswer;
+    public String getRefAnswer() {
+        return refAnswer;
     }
 
-    public void setReferencedAnswer(Map<String, Object> referencedAnswer) {
-        this.referencedAnswer = referencedAnswer;
+    public void setRefAnswer(String refAnswer) {
+        this.refAnswer = refAnswer;
     }
 
     public String getTags() {

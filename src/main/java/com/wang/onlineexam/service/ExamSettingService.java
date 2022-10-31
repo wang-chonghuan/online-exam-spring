@@ -20,6 +20,9 @@ public class ExamSettingService {
     @Autowired
     private StudentExamRelationRepository studentExamRelationRepository;
 
+    @Autowired
+    private PaperService paperService;
+
 
     public long setupExamSpec(ReqExamSpec examSpec) {
         Optional<Course> course = courseRepository.findById(examSpec.getCourseId());
@@ -36,24 +39,8 @@ public class ExamSettingService {
         return retExam.getId();
     }
 
-    public void setupExamPaper(long examId, ArrayList<QuestionWrapper> qWrapperList) throws Exception {
-        Exam exam = examRepository.findById(examId).get();
-        if(exam.getExamStatus() != Exam.ExamStatus.SETTING) {
-            throw new Exception(String.format("status of examId %d must be SETTING", examId));
-        }
-        Map<String, Object> paperContent = new HashMap<>();
-        QuestionFactory questionFactory = new QuestionFactory();
-        List<QuestionFactory.QuestionContentTemplate> qTemplateList = new ArrayList<>();
-        // many json(individual questions) to class, many class to class array, class array to json
-        // many map to map list, map list to json
-        for(QuestionWrapper qWrapper : qWrapperList) {
-            Question question = questionRepository.findById(qWrapper.questionId).get();
-            Map<String, Object> qContentJsonMap = question.getQuestionContent();
-            QuestionFactory.QuestionContentTemplate qTemplate= questionFactory.createQuestion(question.getQuestionType());
-            qTemplate.init(qContentJsonMap, qWrapper.mark);
-            qTemplateList.add(qTemplate);
-        }
-
+    public void setupExamPaper(long examId, List<QuestionWrapper.Param> qParamList) throws Exception {
+        paperService.createBlankPaperAndSave(examId, qParamList);
     }
 
     public void setupExamStudents(long examId, ArrayList<Long> studentIdList) throws Exception {
@@ -139,10 +126,6 @@ public class ExamSettingService {
             this.durationSeconds = durationSeconds;
         }
     }
-    public class QuestionWrapper {
-        public long questionId;
-        public double mark;
-        public int order;
-    }
+
 
 }
