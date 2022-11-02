@@ -16,7 +16,11 @@ public class PaperService {
     @Autowired
     private StudentExamRelationRepository studentExamRelationRepository;
 
-    // create paper
+    public enum QListTag {
+        blank_question_list, answered_question_list, writing_question_list
+    }
+
+    // step 1: create paper
     public Exam createBlankPaperAndSave(long examId, List<QuestionWrapper.Param> paramList) {
         Exam exam = examRepository.findById(examId).get();
 
@@ -30,14 +34,14 @@ public class PaperService {
         if(blankQuestionList.isEmpty()) {
             return exam;
         } else {
-            exam.setBlankPaper(QuestionWrapper.questionWrapperListToJsonmap(blankQuestionList, "blank_question_list"));
+            exam.setBlankPaper(QuestionWrapper.questionWrapperListToJsonmap(blankQuestionList, QListTag.blank_question_list.name()));
             exam.setExamStatus(Exam.ExamStatus.REGISTERING);
             Exam savedExam = examRepository.save(exam);
             return savedExam;
         }
     }
 
-    // answer paper
+    // step 2: answer paper
     public StudentExamRelation createAnsweredPaperAndSave(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
         // StudentExamRelation.Id id = new StudentExamRelation.Id(studentId, examId);
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
@@ -55,21 +59,27 @@ public class PaperService {
             answeredQuestionList.add(qw);
         }
 
-
-        Map<String, Object> answeredPaper = QuestionWrapper.questionWrapperListToJsonmap(answeredQuestionList, "answered_question_list");
-        rel.setPaperAnswered(answeredPaper);
-        rel.setScore(scoreOfChoiceQuestions);
-        StudentExamRelation retRel = studentExamRelationRepository.save(rel);
-        return retRel;
+        if(!answeredQuestionList.isEmpty()) {
+            Map<String, Object> answeredPaper = QuestionWrapper.questionWrapperListToJsonmap(answeredQuestionList, QListTag.answered_question_list.name());
+            rel.setPaperAnswered(answeredPaper);
+            rel.setScore(scoreOfChoiceQuestions);
+            StudentExamRelation retRel = studentExamRelationRepository.save(rel);
+            return retRel;
+        }
+        return rel;
     }
 
-    // grade paper step 1
+    // step 3.1: grade paper
     // return all the writing questions to frontend, json format
-    public Map<String, Object> findAllWritingQuestions(long studentId, long examId) {
+    public Map<String, Object> findAllWritingQuestions(long studentId, long examId) throws Exception {
+
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaper = rel.getPaperAnswered();
 
-        List<Object> questionWrapperList = (List<Object>)answeredPaper.get("answered_question_list");
+        List<Object> questionWrapperList = (List<Object>)answeredPaper.get(QListTag.answered_question_list.name());
+        if(questionWrapperList.isEmpty()) {
+            throw new Exception("the answeredPaper should not be empty when calling findAllWritingQuestions");
+        }
         List<QuestionWrapper> writingQuestionList = new ArrayList<>();
         for(Object obj : questionWrapperList) {
             Map<String, Object> answeredQuestion = (Map<String, Object>)obj;
@@ -80,14 +90,14 @@ public class PaperService {
             }
         }
 
-        return QuestionWrapper.questionWrapperListToJsonmap(writingQuestionList, "writing_question_list");
+        return QuestionWrapper.questionWrapperListToJsonmap(writingQuestionList, QListTag.writing_question_list.name());
     }
 
-    // grade paper step 2
+    // step 3.2: grade paper
     public void saveWritingScores(long studentId, long examId, ArrayList<QuestionWrapper.Param> paramList) throws Exception {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaperJsonmap = rel.getPaperAnswered();
-        List<QuestionWrapper> questionWrapperList = QuestionWrapper.jsonmapToQuestionWrapperList(answeredPaperJsonmap, "answered_question_list");
+        List<QuestionWrapper> questionWrapperList = QuestionWrapper.jsonmapToQuestionWrapperList(answeredPaperJsonmap, QListTag.answered_question_list.name());
         double totalScore = rel.getScore();
         for(int indexParam = 0, indexWrapper = 0; indexWrapper <= questionWrapperList.size(); ) {
             QuestionWrapper qWrapper = questionWrapperList.get(indexWrapper);
@@ -102,7 +112,7 @@ public class PaperService {
             }
         }
         rel.setScore(totalScore);
-        rel.setPaperAnswered(QuestionWrapper.questionWrapperListToJsonmap(questionWrapperList, "answered_question_list"));
+        rel.setPaperAnswered(QuestionWrapper.questionWrapperListToJsonmap(questionWrapperList, QListTag.answered_question_list.name()));
         studentExamRelationRepository.save(rel);
     }
 }

@@ -28,9 +28,10 @@ public class QuestionWrapper {
     }
 
     public void initByJsonmap(Map<String, Object> jsonmap) {
-        this.questionId = Long.valueOf(String.valueOf(jsonmap.get("question_id")));
-        this.type = Question.QuestionType.values()[Integer.valueOf(String.valueOf(jsonmap.get("question_id")))];
-        this.refAnswer = String.valueOf(jsonmap.get("ref_answer"));
+        // must use the property name as the get method param
+        this.questionId = Long.valueOf(String.valueOf(jsonmap.get("questionId")));
+        this.type = Question.QuestionType.valueOf(String.valueOf(jsonmap.get("type"))); // string to enum
+        this.refAnswer = String.valueOf(jsonmap.get("refAnswer"));
         this.content = (Map<String, Object>) jsonmap.get("content");
         this.order = Integer.valueOf(String.valueOf(jsonmap.get("order")));
         this.mark = Double.valueOf(String.valueOf(jsonmap.get("mark")));
@@ -94,5 +95,26 @@ public class QuestionWrapper {
         public double mark;
         public double score;
         public String answer;
+    }
+
+    public static class ParamList {
+        public long getExamId() {
+            return examId;
+        }
+
+        public void setExamId(long examId) {
+            this.examId = examId;
+        }
+
+        public List<Param> getParamList() {
+            return paramList;
+        }
+
+        public void setParamList(List<Param> paramList) {
+            this.paramList = paramList;
+        }
+
+        private long examId;
+        private List<Param> paramList;
     }
 }
