@@ -25,7 +25,7 @@ public class ExamController {
     public ResponseEntity<?> createBlankPaper(@RequestBody QuestionWrapper.ListParam req) throws JsonProcessingException {
         Exam exam = paperService.createBlankPaper(req.getExamId(), req.getParamList());
         String blankPaperJsonstr = AnyUtil.jsonmapToJsonstr(exam.getBlankPaper());
-        logger.info(String.format("createBlankPaper:: examId: %d updated with blankPaper: %s", exam.getId(), blankPaperJsonstr));
+        //logger.info(String.format("createBlankPaper:: examId: %d updated with blankPaper: %s", exam.getId(), blankPaperJsonstr));
         // 200 is the appropriate status code assuming the PUT only did an update and did not create a resource.
         return ResponseEntity.ok().body(blankPaperJsonstr);
     }
@@ -41,6 +41,7 @@ public class ExamController {
     public ResponseEntity<?> fetchWritingQuestions(@RequestParam long studentId, @RequestParam long examId) throws Exception {
         Map<String, Object> writingQuestionsJsonmap = paperService.fetchWritingQuestions(studentId, examId);
         String writingQuestionsJsonstr = AnyUtil.jsonmapToJsonstr(writingQuestionsJsonmap);
+        //logger.info(String.format("fetchWritingQuestions returns: %s", writingQuestionsJsonstr));
         return ResponseEntity.ok().body(writingQuestionsJsonstr);
     }
 
