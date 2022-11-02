@@ -21,7 +21,7 @@ public class PaperService {
     }
 
     // step 1: create paper
-    public Exam createBlankPaperAndSave(long examId, List<QuestionWrapper.Param> paramList) {
+    public Exam createBlankPaper(long examId, List<QuestionWrapper.Param> paramList) {
         Exam exam = examRepository.findById(examId).get();
 
         List<QuestionWrapper> blankQuestionList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class PaperService {
     }
 
     // step 2: answer paper
-    public StudentExamRelation createAnsweredPaperAndSave(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
+    public StudentExamRelation createAnsweredPaper(long studentId, long examId, List<QuestionWrapper.Param> paramList) {
         // StudentExamRelation.Id id = new StudentExamRelation.Id(studentId, examId);
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
 
@@ -94,12 +94,13 @@ public class PaperService {
     }
 
     // step 3.2: grade paper
-    public void saveWritingScores(long studentId, long examId, ArrayList<QuestionWrapper.Param> paramList) throws Exception {
+    // the param should not be ArrayList<>, otherwise the Arrays.asList() cant be passed into this method
+    public StudentExamRelation saveWritingScores(long studentId, long examId, List<QuestionWrapper.Param> paramList) throws Exception {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaperJsonmap = rel.getPaperAnswered();
         List<QuestionWrapper> questionWrapperList = QuestionWrapper.jsonmapToQuestionWrapperList(answeredPaperJsonmap, QListTag.answered_question_list.name());
         double totalScore = rel.getScore();
-        for(int indexParam = 0, indexWrapper = 0; indexWrapper <= questionWrapperList.size(); ) {
+        for(int indexParam = 0, indexWrapper = 0; indexWrapper < questionWrapperList.size(); ) {
             QuestionWrapper qWrapper = questionWrapperList.get(indexWrapper);
             QuestionWrapper.Param qParam = paramList.get(indexParam);
             if(qWrapper.questionId != qParam.questionId) {
@@ -113,6 +114,6 @@ public class PaperService {
         }
         rel.setScore(totalScore);
         rel.setPaperAnswered(QuestionWrapper.questionWrapperListToJsonmap(questionWrapperList, QListTag.answered_question_list.name()));
-        studentExamRelationRepository.save(rel);
+        return studentExamRelationRepository.save(rel);
     }
 }

@@ -40,7 +40,7 @@ public class ExamSettingService {
     }
 
     public void setupExamPaper(long examId, List<QuestionWrapper.Param> qParamList) throws Exception {
-        paperService.createBlankPaperAndSave(examId, qParamList);
+        paperService.createBlankPaper(examId, qParamList);
     }
 
     public void setupExamStudents(long examId, ArrayList<Long> studentIdList) throws Exception {

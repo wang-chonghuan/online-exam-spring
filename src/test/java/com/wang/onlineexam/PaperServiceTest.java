@@ -1,12 +1,9 @@
 package com.wang.onlineexam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wang.onlineexam.domain.*;
 import com.wang.onlineexam.service.PaperService;
 import com.wang.onlineexam.service.QuestionWrapper;
 import com.wang.onlineexam.utils.AnyUtil;
-import org.checkerframework.checker.units.qual.A;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +31,9 @@ public class PaperServiceTest {
     private final String correctResultForFindAllWritingQuestions = "{\"writing_question_list\":[{\"questionId\":3,\"type\":\"WRITING\",\"refAnswer\":\"Robert Griesemer, Rob Pike, and Ken Thompson\",\"content\":{\"statement\":\"Who created golang?\"},\"order\":3,\"mark\":2.0,\"score\":0.0,\"answer\":\"Robe Pike\"}]}";
 
     @Test
-    void testCreateBlankPaperAndSave() {
+    void testCreateBlankPaper() {
         Exam exam = examRepository.findByTitle("CS5741-midtern-exam").stream().findFirst().get();
-        Exam examWithBlankPaper = paperService.createBlankPaperAndSave(exam.getId(), Arrays.asList(
+        Exam examWithBlankPaper = paperService.createBlankPaper(exam.getId(), Arrays.asList(
             new QuestionWrapper.Param(questionRepository.findById(1L).get().getId(), 1, 5, 0, ""),
             new QuestionWrapper.Param(questionRepository.findById(2L).get().getId(), 2, 3, 0, ""),
             new QuestionWrapper.Param(questionRepository.findById(3L).get().getId(), 3, 2, 0, "")
@@ -45,8 +42,8 @@ public class PaperServiceTest {
     }
 
     @Test
-    void testCreateAnsweredPaperAndSave() {
-        StudentExamRelation rel = paperService.createAnsweredPaperAndSave(1L, 1L, Arrays.asList(
+    void testCreateAnsweredPaper() {
+        StudentExamRelation rel = paperService.createAnsweredPaper(1L, 1L, Arrays.asList(
             new QuestionWrapper.Param(questionRepository.findById(1L).get().getId(), 1, 5, 0, "B"),
             new QuestionWrapper.Param(questionRepository.findById(2L).get().getId(), 2, 3, 0, "A,B,D"),
             new QuestionWrapper.Param(questionRepository.findById(3L).get().getId(), 3, 2, 0, "Robe Pike")
@@ -59,8 +56,8 @@ public class PaperServiceTest {
     void testFindAllWritingQuestions() throws Exception {
 
         // todo! for better solution? the first two tests must be performed to get data for this test
-        testCreateBlankPaperAndSave();
-        testCreateAnsweredPaperAndSave();
+        testCreateBlankPaper();
+        testCreateAnsweredPaper();
 
         Map<String, Object> allWritingQsJsonmap = new HashMap<>();
         allWritingQsJsonmap = paperService.findAllWritingQuestions(1L, 1L);
@@ -70,6 +67,16 @@ public class PaperServiceTest {
         // todo! here is a problem: allWritingQsJsonstr's double value is 2.0,
         // todo! but when i convert it to string use the website, it becomes 2, idk which one is correct
         assertThat(allWritingQsJsonstr.equals(correctResultForFindAllWritingQuestions)).isTrue();
+    }
+
+    @Test
+    void testSaveWritingScores() throws Exception {
+        testFindAllWritingQuestions();
+        //long questionId, int order, double mark, double score, String answer
+        // todo! here might be a bug, if answer is not set this time, will the empty answer covers the one in db?
+        QuestionWrapper.Param p1 = new QuestionWrapper.Param(3, 3, 2.0, 1.5, "");
+        StudentExamRelation rel = paperService.saveWritingScores(1L, 1L, Arrays.asList(p1));
+        assertThat(rel.getScore() == 9.5).isTrue();
     }
 }
 
