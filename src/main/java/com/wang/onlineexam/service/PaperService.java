@@ -20,6 +20,13 @@ public class PaperService {
         blank_question_list, answered_question_list, writing_question_list
     }
 
+    /**
+     * todo! design patterns:
+     * Exam and StudentExamRelation should have states,
+     * if the request doesnt match the state, they may behavior differently
+     * if they dont match, should response differently
+     */
+
     // step 1: create paper
     public Exam createBlankPaper(long examId, List<QuestionWrapper.Param> paramList) {
         Exam exam = examRepository.findById(examId).get();
@@ -53,7 +60,7 @@ public class PaperService {
             QuestionWrapper qw = new QuestionWrapper();
             qw.initByClass(question, qParam);
             // grade the choice question
-            qw.gradeIfChoiceQuestion(question);
+            qw.autoGrade(question);
             scoreOfChoiceQuestions += qw.score;
             // gen the question json
             answeredQuestionList.add(qw);

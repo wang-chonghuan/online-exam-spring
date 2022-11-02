@@ -32,14 +32,6 @@ public class ExamRestTest {
         r = r.andDo(print()).andExpect(status().isOk());
     }
 
-    /**
-     *         StudentExamRelation rel = paperService.createAnsweredPaper(1L, 1L, Arrays.asList(
-     *             new QuestionWrapper.Param(questionRepository.findById(1L).get().getId(), 1, 5, 0, "B"),
-     *             new QuestionWrapper.Param(questionRepository.findById(2L).get().getId(), 2, 3, 0, "A,B,D"),
-     *             new QuestionWrapper.Param(questionRepository.findById(3L).get().getId(), 3, 2, 0, "Robe Pike")
-     *         ));
-     */
-
     // todo! how to make sure this answeredPaper is the same with the blank paper? there should be a verification, at least the blank paper is set
     // todo! if the score field is not set in the requestBody, will the system crash by null pointer exception?
     @Test

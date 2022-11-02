@@ -72,13 +72,9 @@ public class QuestionWrapper {
         return qwList;
     }
 
-    public int gradeIfChoiceQuestion(Question question) {
-        if(question.getQuestionType() == Question.QuestionType.WRITING) {
-            return 1;
-        } else {
-            score = (question.getRefAnswer().equals(answer) ? mark : 0.0);
-            return 0;
-        }
+    public void autoGrade(Question q) {
+        QuestionFactory.Base questionBase = QuestionFactory.create(q.getQuestionType());
+        this.score = questionBase.grade(answer, q.getRefAnswer(), mark);
     }
 
     // this inner class must be static, otherwise it cant be newed outside its owner class
