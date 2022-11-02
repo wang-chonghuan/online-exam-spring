@@ -22,11 +22,12 @@ public class QuestionFactory {
         return null;
     }
 
-    public static abstract class Base {
-        public abstract double grade(String answer, String refAnswer, double mark);
+    public interface Base {
+        double grade(String answer, String refAnswer, double mark);
     }
 
-    public static class SingleChoice extends Base {
+    // NOTICE! this class must be static, otherwise it cant be produced by the factory
+    private static class SingleChoice implements Base {
 
         @Override
         public double grade(String answer, String refAnswer, double mark) {
@@ -38,7 +39,7 @@ public class QuestionFactory {
         }
     }
 
-    public static class MultipleChoice extends Base {
+    private static class MultipleChoice implements Base {
 
         @Override
         public double grade(String answer, String refAnswer, double mark) {
@@ -58,7 +59,7 @@ public class QuestionFactory {
         }
     }
 
-    public static class Writing extends Base {
+    private static class Writing implements Base {
 
         @Override
         public double grade(String answer, String refAnswer, double mark) {
