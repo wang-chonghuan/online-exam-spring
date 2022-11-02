@@ -53,14 +53,14 @@ public class PaperServiceTest {
     }
 
     @Test
-    void testFindAllWritingQuestions() throws Exception {
+    void testFetchWritingQuestions() throws Exception {
 
         // todo! for better solution? the first two tests must be performed to get data for this test
         testCreateBlankPaper();
         testCreateAnsweredPaper();
 
         Map<String, Object> allWritingQsJsonmap = new HashMap<>();
-        allWritingQsJsonmap = paperService.findAllWritingQuestions(1L, 1L);
+        allWritingQsJsonmap = paperService.fetchWritingQuestions(1L, 1L);
         String allWritingQsJsonstr = AnyUtil.jsonmapToJsonstr(allWritingQsJsonmap);
         //logger.info(allWritingQsJsonstr);
         //logger.info(correctResultForFindAllWritingQuestions);
@@ -70,12 +70,12 @@ public class PaperServiceTest {
     }
 
     @Test
-    void testSaveWritingScores() throws Exception {
-        testFindAllWritingQuestions();
+    void testUpdateWritingScores() throws Exception {
+        testFetchWritingQuestions();
         //long questionId, int order, double mark, double score, String answer
         // todo! here might be a bug, if answer is not set this time, will the empty answer covers the one in db?
         QuestionWrapper.Param p1 = new QuestionWrapper.Param(3, 3, 2.0, 1.5, "");
-        StudentExamRelation rel = paperService.saveWritingScores(1L, 1L, Arrays.asList(p1));
+        StudentExamRelation rel = paperService.updateWritingScores(1L, 1L, Arrays.asList(p1));
         assertThat(rel.getScore() == 9.5).isTrue();
     }
 }

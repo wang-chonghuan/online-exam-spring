@@ -97,7 +97,11 @@ public class QuestionWrapper {
         public String answer;
     }
 
-    public static class ParamList {
+    public static class ListParam {
+        private long examId;
+        private long studentId;
+        private List<Param> paramList;
+
         public long getExamId() {
             return examId;
         }
@@ -114,7 +118,12 @@ public class QuestionWrapper {
             this.paramList = paramList;
         }
 
-        private long examId;
-        private List<Param> paramList;
+        public long getStudentId() {
+            return studentId;
+        }
+
+        public void setStudentId(long studentId) {
+            this.studentId = studentId;
+        }
     }
 }

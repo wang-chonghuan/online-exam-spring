@@ -71,14 +71,14 @@ public class PaperService {
 
     // step 3.1: grade paper
     // return all the writing questions to frontend, json format
-    public Map<String, Object> findAllWritingQuestions(long studentId, long examId) throws Exception {
+    public Map<String, Object> fetchWritingQuestions(long studentId, long examId) throws Exception {
 
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaper = rel.getPaperAnswered();
 
         List<Object> questionWrapperList = (List<Object>)answeredPaper.get(QListTag.answered_question_list.name());
         if(questionWrapperList.isEmpty()) {
-            throw new Exception("the answeredPaper should not be empty when calling findAllWritingQuestions");
+            throw new Exception("the answeredPaper should not be empty when calling fetchWritingQuestions");
         }
         List<QuestionWrapper> writingQuestionList = new ArrayList<>();
         for(Object obj : questionWrapperList) {
@@ -95,7 +95,7 @@ public class PaperService {
 
     // step 3.2: grade paper
     // the param should not be ArrayList<>, otherwise the Arrays.asList() cant be passed into this method
-    public StudentExamRelation saveWritingScores(long studentId, long examId, List<QuestionWrapper.Param> paramList) throws Exception {
+    public StudentExamRelation updateWritingScores(long studentId, long examId, List<QuestionWrapper.Param> paramList) throws Exception {
         StudentExamRelation rel = studentExamRelationRepository.findByStudentIdAndExamId(studentId, examId).stream().findFirst().get();
         Map<String, Object> answeredPaperJsonmap = rel.getPaperAnswered();
         List<QuestionWrapper> questionWrapperList = QuestionWrapper.jsonmapToQuestionWrapperList(answeredPaperJsonmap, QListTag.answered_question_list.name());
