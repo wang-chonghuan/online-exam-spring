@@ -3,8 +3,8 @@ package com.wang.onlineexam.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wang.onlineexam.domain.Exam;
 import com.wang.onlineexam.domain.StudentExamRelation;
+import com.wang.onlineexam.dto.QuestionListDTO;
 import com.wang.onlineexam.service.PaperService;
-import com.wang.onlineexam.service.QuestionWrapper;
 import com.wang.onlineexam.utils.AnyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class ExamController {
     private static final Logger logger = LoggerFactory.getLogger(ExamController.class);
 
     @RequestMapping(value="/create-blank-paper", method= RequestMethod.POST)
-    public ResponseEntity<?> createBlankPaper(@RequestBody QuestionWrapper.ListParam req) throws JsonProcessingException {
+    public ResponseEntity<?> createBlankPaper(@RequestBody QuestionListDTO req) throws JsonProcessingException {
         Exam exam = paperService.createBlankPaper(req.getExamId(), req.getParamList());
         String blankPaperJsonstr = AnyUtil.jsonmapToJsonstr(exam.getBlankPaper());
         //logger.info(String.format("createBlankPaper:: examId: %d updated with blankPaper: %s", exam.getId(), blankPaperJsonstr));
@@ -31,7 +31,7 @@ public class ExamController {
     }
 
     @RequestMapping(value="/create-answered-paper", method= RequestMethod.POST)
-    public ResponseEntity<?> createAnsweredPaper(@RequestBody QuestionWrapper.ListParam req) throws JsonProcessingException {
+    public ResponseEntity<?> createAnsweredPaper(@RequestBody QuestionListDTO req) throws JsonProcessingException {
         StudentExamRelation rel = paperService.createAnsweredPaper(req.getStudentId(), req.getExamId(), req.getParamList());
         String answeredPaperJsonstr = AnyUtil.jsonmapToJsonstr(rel.getPaperAnswered());
         return ResponseEntity.ok().body(answeredPaperJsonstr);
@@ -46,7 +46,7 @@ public class ExamController {
     }
 
     @RequestMapping(value="/update-writing-scores", method= RequestMethod.POST)
-    public ResponseEntity<?> updateWritingScores(@RequestBody QuestionWrapper.ListParam req) throws Exception {
+    public ResponseEntity<?> updateWritingScores(@RequestBody QuestionListDTO req) throws Exception {
         StudentExamRelation rel = paperService.updateWritingScores(req.getStudentId(), req.getExamId(), req.getParamList());
         return ResponseEntity.ok().body(rel.getScore());
     }
